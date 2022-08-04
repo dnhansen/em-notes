@@ -1,0 +1,265 @@
+% Document setup
+\documentclass[article, a4paper, 11pt, oneside]{memoir}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[UKenglish]{babel}
+
+% Document info
+\newcommand\doctitle{Notes on electromagnetism}
+\newcommand\docauthor{Danny Nygård Hansen}
+
+% Formatting and layout
+\usepackage[autostyle]{csquotes}
+\renewcommand{\mktextelp}{(\textellipsis\unkern)}
+\usepackage[final]{microtype}
+\usepackage{xcolor}
+\frenchspacing
+\usepackage{latex-sty/articlepagestyle}
+\usepackage{latex-sty/articlesectionstyle}
+
+% Fonts
+\usepackage{amssymb}
+\usepackage[largesmallcaps,partialup]{kpfonts}
+\DeclareSymbolFontAlphabet{\mathrm}{operators} % https://tex.stackexchange.com/questions/40874/kpfonts-siunitx-and-math-alphabets
+\linespread{1.06}
+% \let\mathfrak\undefined
+% \usepackage{eufrak}
+\DeclareMathAlphabet\mathfrak{U}{euf}{m}{n}
+\SetMathAlphabet\mathfrak{bold}{U}{euf}{b}{n}
+% https://tex.stackexchange.com/questions/13815/kpfonts-with-eufrak
+\usepackage{inconsolata}
+
+% Hyperlinks
+\usepackage{hyperref}
+\definecolor{linkcolor}{HTML}{4f4fa3}
+\hypersetup{%
+	pdftitle=\doctitle,
+	pdfauthor=\docauthor,
+	colorlinks,
+	linkcolor=linkcolor,
+	citecolor=linkcolor,
+	urlcolor=linkcolor,
+	bookmarksnumbered=true
+}
+
+% Equation numbering
+\numberwithin{equation}{chapter}
+
+% Footnotes
+\footmarkstyle{\textsuperscript{#1}\hspace{0.25em}}
+
+% Mathematics
+\usepackage{latex-sty/basicmathcommands}
+\usepackage{latex-sty/framedtheorems}
+\usepackage{latex-sty/topologycommands}
+\usepackage{tikz-cd}
+\tikzcdset{arrow style=math font} % https://tex.stackexchange.com/questions/300352/equalities-look-broken-with-tikz-cd-and-math-font
+\usetikzlibrary{babel}
+
+% Lists
+\usepackage{enumitem}
+\setenumerate[0]{label=\normalfont(\alph*)}
+
+% Bibliography
+\usepackage[backend=biber, style=authoryear, maxcitenames=2, useprefix]{biblatex}
+\addbibresource{references.bib}
+
+% Title
+\title{\doctitle}
+\author{\docauthor}
+
+
+%% Framed exercise environment
+
+\mdfdefinestyle{swannexercise}{%
+    skipabove=0.5em plus 0.4em minus 0.2em,
+	skipbelow=0.5em plus 0.4em minus 0.2em,
+	leftmargin=-5pt,
+	rightmargin=-5pt,
+	innerleftmargin=5pt,
+	innerrightmargin=5pt,
+	innertopmargin=5pt,
+	innerbottommargin=4pt,
+	linewidth=0pt,
+	splittopskip=1.2em minus 0.2em,
+	splitbottomskip=0.5em plus 0.2em minus 0.1em,
+	backgroundcolor=backgroundcolor,
+	frametitlebackgroundcolor=titlecolor,
+	frametitlefont={\scshape},
+    theoremseparator={},
+    % theoremspace={},
+	frametitleaboveskip=3pt,
+	frametitlebelowskip=2pt
+}
+
+\mdtheorem[style=swannexercise]{exerciseframed}{Exercise}
+
+\let\oldexerciseframed\exerciseframed
+\renewcommand{\exerciseframed}{%
+  \crefalias{theorem}{exerciseframed}%
+  \oldexerciseframed}
+
+\usepackage{listofitems}
+
+\settocdepth{subsection}
+\renewenvironment{exerciseframed}[1][]{%
+    \setsepchar{.}%
+    \readlist*\mylist{#1}%
+    \def\smalllabel{\mylist[2].\mylist[3]}%
+    \refstepcounter{exerciseframed}%
+    % \addcontentsline{toc}{subsection}{Exercise \smalllabel}%
+    \begin{exerciseframed*}[#1]%
+    \label{ex:#1}%
+}{%
+    \end{exerciseframed*}%
+}
+
+% https://tex.stackexchange.com/a/23491/63353
+\newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+
+\newcommand{\exref}[1]{%
+    % \setsepchar{.}%
+    % \readlist*\mylist{#1}%
+    % \ifnum \arabic{chapter}=\mylist[1]
+    %     \def\mylabel{\mylist[2].\mylist[3]}%
+    % \else
+    %     \def\mylabel{\RNum{\mylist[1]}.\mylist[2].\mylist[3]}%
+    % \fi
+    \hyperref[ex:#1]{Exercise~#1}%
+}
+
+
+\mdtheorem[style=swannexercise]{problemframed}{Problem}
+
+\let\oldproblemframed\problemframed
+\renewcommand{\problemframed}{%
+  \crefalias{theorem}{problemframed}%
+  \oldproblemframed}
+
+\renewenvironment{problemframed}[1][]{%
+    \setsepchar{.}%
+    \readlist*\mylist{#1}%
+    \def\smalllabel{\mylist[2].\mylist[3]}%
+    \refstepcounter{problemframed}%
+    % \addcontentsline{toc}{subsection}{Exercise \smalllabel}%
+    \begin{problemframed*}[#1]%
+    \label{prob:#1}%
+}{%
+    \end{problemframed*}%
+}
+
+\newcommand{\probref}[1]{%
+    % \setsepchar{.}%
+    % \readlist*\mylist{#1}%
+    % \ifnum \arabic{chapter}=\mylist[1]
+    %     \def\mylabel{\mylist[2].\mylist[3]}%
+    % \else
+    %     \def\mylabel{\RNum{\mylist[1]}.\mylist[2].\mylist[3]}%
+    % \fi
+    \hyperref[prob:#1]{Problem~#1}%
+}
+
+
+\theoremstyle{nonumberplain}
+\theoremsymbol{\ensuremath{\square}}
+\newtheorem{solution}{Solution}
+
+\let\oldsolution\solution
+\renewcommand{\solution}{%
+  \crefalias{theorem}{solution}%
+  \oldsolution}
+
+\newcommand{\solutionlabelfont}[1]{{\normalfont\color{linkcolor}#1}}
+\newlist{solutionsec}{enumerate}{1}
+\setlist[solutionsec]{leftmargin=0pt, parsep=0pt, listparindent=\parindent, font=\solutionlabelfont, label=(\alph*), labelsep=0pt, labelwidth=20pt, itemindent=20pt, align=left, itemsep=10pt}
+
+\newenvironment{displaytheorem}{%
+	\begin{displayquote}\itshape%
+}{%
+	\end{displayquote}%
+}
+
+
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calV}{\mathcal{V}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\bbF}{\mathbb{F}}
+
+% TODO move to .sty?
+\renewcommand{\disunion}{\sqcup}
+
+% Vectors
+\newcommand{\uvec}[1]{\hat{\vec{#1}}}
+
+% Vector calculus
+\newcommand{\grad}{\nabla}
+
+
+\begin{document}
+
+\maketitle
+
+\chapter{Electric potential}
+
+Since electric fields are conservative (i.e. line integrals of electric fields are independent of path), given a reference point $\vec{r}_0$ we may define a potential function
+%
+\begin{equation*}
+    \phi(\vec{r})
+        = - \int_{\vec{r}_0}^{\vec{r}} \vec{E} \cdot \dif \vec{s}
+\end{equation*}
+%
+for an electric field $\vec{E}$, for any path from $\vec{r}_0$ to a point $\vec{r}$. It is then a theorem of vector calculus that $\vec{E} = - \grad \phi$ (this only assumes that $\vec{E}$ is continuous on an open connected domain; of course if $\vec{E}$ is $C^k$ then $\phi$ is $C^{k+1}$).
+
+More informally we may argue as follows: By definition of $\phi$ we have $\dif \phi = - \vec{E} \cdot \dif \vec{s}$, and on the other hand the chain rule implies that
+%
+\begin{equation*}
+    \dif \phi
+        = \frac{\partial \phi}{\partial x} \dif x
+          + \frac{\partial \phi}{\partial y} \dif y
+          + \frac{\partial \phi}{\partial z} \dif z
+        = \grad\phi \cdot \dif\vec{s},
+\end{equation*}
+%
+where $\dif\vec{s} = \uvec{x} \dif x + \uvec{y} \dif y + \uvec{z} \dif z$. Hence $\vec{E} \cdot \dif\vec{s} = -\grad\phi \cdot \dif\vec{s}$ for all small displacements $\dif\vec{s}$, which implies that $\vec{E} = -\grad\phi$.
+
+
+\chapter{Energy in electrostatics}
+
+Given a collection of $N$ point charges $q_i$, it is easy to show that the work required to bring these charges from infinity to positions $\vec{r}_i$ is
+%
+\begin{equation*}
+    W
+        = \frac{1}{2} \sum_{i=1}^N \sum_{j \neq i} \frac{1}{4\pi\epsilon_0} \frac{q_i q_j}{r_{ij}},
+\end{equation*}
+%
+where $r_{ij} = \norm{\vec{r}_i - \vec{r}_j}$. That is, we assume that these charges already exist, and we simply move them close to each other. The above is thus the potential energy associated with the interactions between the particles, not taking into account any energy associated with the particles themselves. The above may also be written
+%
+\begin{equation*}
+    W
+        = \frac{1}{2} \sum_{i=1}^N q_i \phi_i(\vec{r}_i),
+\end{equation*}
+%
+where $\phi_i$ is the potential due to all charges apart from the $i$th charge.
+
+Now consider a continuous charge distribution with charge density $\rho$. The above tells us that to find the energy associated with a charge distribution, we take the charge of each charge and multiply it by the potential due to all other charges, add up all contributions and divide by $2$. Since the distribution in this case is continuous, the potential due to the charge at a single point is zero, so we may simply use the total potential $\phi$ due to the entire distribution. Furthermore, since there are no point charges we consider the charge in a small volume $\dif v$ located at a point $\vec{r}$. The potential is approximately constant over this volume, so the charge is $\rho(\vec{r}) \dif v$. Hence
+%
+\begin{equation*}
+    \dif W
+        = \frac{1}{2} \rho(\vec{r}) \phi(\vec{r}) \dif v,
+\end{equation*}
+%
+and adding up all contributions we get
+%
+\begin{equation*}
+    W
+        = \frac{1}{2} \int \rho(\vec{r}) \phi(\vec{r}) \dif v.
+\end{equation*}
+%
+To be clear, this formula was derived under the assumption that the charge distribution in question did not contain point charges.
+
+
+
+\end{document}
